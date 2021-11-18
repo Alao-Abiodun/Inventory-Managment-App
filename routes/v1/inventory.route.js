@@ -6,6 +6,7 @@ const {
   fetchInventory,
   updateInventory,
   removeAnInventory,
+  addToCart,
 } = require("../../controller/inventory.controller");
 
 const {
@@ -14,6 +15,7 @@ const {
 } = require("../../middleware/validation");
 
 router.post("/add", validateUserToken, validateAdmin, addInventory);
+router.post("/addToCart/:id", validateUserToken, validateAdmin, addToCart);
 router.get("/fetch", validateUserToken, fetchInventory);
 router.patch("/update/:id", validateUserToken, validateAdmin, updateInventory);
 router.delete(

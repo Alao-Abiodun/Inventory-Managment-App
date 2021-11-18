@@ -2,6 +2,33 @@ const Inventory = require("../models/inventory.model");
 const Error = require("../lib/error");
 const Response = require("../lib/response");
 
+exports.addToCart = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw Error("Id Not Found!", 404);
+    }
+    const inventoryExist = await Inventory.findOne({ _id: id });
+    if (!inventoryExist) {
+      throw Error("Inventory ObjectId Not Found!", "", 404);
+    }
+    const qty = await Inventory.findOneAndUpdate(
+      { _id: id },
+      { $inc: { quantity: 1 } },
+      { new: true, upsert: true }
+    );
+    Response(res).success(
+      {
+        message: "Quantity of the inventory has been increased",
+        quantity: qty.quantity,
+      },
+      200
+    );
+  } catch (error) {
+    Response(res).error(error, error.code);
+  }
+};
+
 exports.addInventory = async (req, res) => {
   try {
     const { name, price, quantity } = req.body;
@@ -37,7 +64,7 @@ exports.updateInventory = async (req, res) => {
     }
     const inventoryExist = await Inventory.findById({ _id: id });
     if (!inventoryExist) {
-      throw Error("Inventory ObjectId Not Found!", "", 401);
+      throw Error("Inventory ObjectId Not Found!", "", 404);
     }
     const changeInventory = await Inventory.findOneAndUpdate(
       { _id: id },
@@ -55,7 +82,7 @@ exports.removeAnInventory = async (req, res) => {
     const { id } = req.params;
     const inventoryExist = await Inventory.findById({ _id: id });
     if (!inventoryExist) {
-      throw Error("Id Not Found!", "", 401);
+      throw Error("Id Not Found!", "", 404);
     }
     const removeInventory = await Inventory.findOneAndDelete({ _id: id });
     Response(res).success(
