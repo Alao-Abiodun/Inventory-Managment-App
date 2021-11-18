@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
 
-const inventoryRoute = require("./routes/index");
+const router = require("./routes/index");
 
 app.use(express.json());
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 
 const { PORT, DB_USERNAME, DB_PASSWORD } = process.env || 2005;
 
@@ -25,11 +25,11 @@ mongoose
   .then(() => console.log("Database connected"))
   .catch((error) => console.log("Database Not Connected", error.message));
 
-app.use("/", (req, res, next) => {
-  res.send("The main application route");
+app.get("/", (req, res, next) => {
+  res.status(200).json({ message: "The main application route" });
 });
 
-app.use("/api", inventoryRoute);
+app.use("/api", router);
 
 app.listen(PORT, (req, res, next) => {
   console.log(`Application running on PORT ${PORT}`);

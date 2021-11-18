@@ -1,4 +1,6 @@
-const { model, Schema } = require("mongoose");
+const mongoose = require("mongoose");
+
+const Schema = mongoose.Schema;
 
 const inventorySchema = new Schema(
   {
@@ -11,13 +13,8 @@ const inventorySchema = new Schema(
       required: [true, "Please enter the price of the item"],
     },
     quantity: {
-      type: String,
+      type: Number,
       required: [true, "Please enter the quantity you want for the item"],
-    },
-    role: {
-      type: String,
-      enum: ["Admin", "User"],
-      default: "User",
     },
   },
   {
@@ -25,6 +22,6 @@ const inventorySchema = new Schema(
   }
 );
 
-const Inventory = model("Inventory", inventorySchema);
+const Inventory = mongoose.model("Inventory", inventorySchema);
 
-module.export = Inventory;
+module.exports = Inventory;

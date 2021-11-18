@@ -1,8 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-const { addInventory } = require("../../controller/inventory.controller");
+const {
+  addInventory,
+  fetchInventory,
+  updateInventory,
+  removeAnInventory,
+} = require("../../controller/inventory.controller");
 
-router.post("/inventory", addInventory);
+const {
+  validateUserToken,
+  validateAdmin,
+} = require("../../middleware/validation");
+
+router.post("/add", validateUserToken, validateAdmin, addInventory);
+router.get("/fetch", validateUserToken, fetchInventory);
+router.patch("/update/:id", validateUserToken, validateAdmin, updateInventory);
+router.delete(
+  "/remove/:id",
+  validateUserToken,
+  validateAdmin,
+  removeAnInventory
+);
 
 module.exports = router;
